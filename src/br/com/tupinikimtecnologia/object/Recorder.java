@@ -32,6 +32,7 @@ public class Recorder extends Thread {
     public Recorder(AudioFileFormat.Type fileType, File audioFile){
         this.fileType = fileType;
         this.audioFile = audioFile;
+        this.isRecording = true;
         this.audioFormat = new AudioFormat(16000, 8, 2, true, true);
     }
     
@@ -60,7 +61,7 @@ public class Recorder extends Thread {
         }
     }
     
-    private void stopRecord(){
+    public void stopRecord(){
         line.stop();
         line.close();
         System.out.println("Finished");
@@ -69,11 +70,17 @@ public class Recorder extends Thread {
     @Override
     public void run() {
         super.run();
-        while(isRecording){
-            if(!isRecording){
-                stopRecord();
-            }
-        }
+        System.out.println("Chamou run");
+        startRecord();
     }
-    
+ 
+
+    public boolean isIsRecording() {
+        return isRecording;
+    }
+
+    public void setIsRecording(boolean isRecording) {
+        this.isRecording = isRecording;
+    }
+
 }

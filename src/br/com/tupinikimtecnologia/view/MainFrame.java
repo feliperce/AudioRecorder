@@ -8,6 +8,8 @@ import br.com.tupinikimtecnologia.object.Recorder;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.sound.sampled.AudioFileFormat;
 import javax.swing.JFrame;
 
@@ -25,6 +27,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     public static final String AUDIO_DIR = System.getProperty("user.home")+"/AudioRecorder/";
     
+    private Recorder recorder;
+    private int second = 0, minute = 0;
+    private boolean isTiming = false;
+    
     public MainFrame() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,9 +46,16 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void record(){
-        File audioFile = new File("RecordAudio.wav");
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_hh:mm:ss");
+        File audioFile = new File(AUDIO_DIR+"record"+sdf.format(date)+".wav");
         
-        Recorder recorder = new Recorder(AudioFileFormat.Type.WAVE, );
+        recorder = new Recorder(AudioFileFormat.Type.WAVE, audioFile);
+        recorder.start();
+    }
+    
+    public void startTimer(){
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -54,6 +67,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         progressBar = new javax.swing.JProgressBar();
         statusLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,19 +103,22 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        jButton1.setText("jButton1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(recordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(recordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,7 +126,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(recordButton)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -122,10 +141,14 @@ public class MainFrame extends javax.swing.JFrame {
             recordButton.setText("STOP RECORD");
             recordButton.setForeground(Color.RED);
             statusLabel.setText("Recording");
+            progressBar.setIndeterminate(true);
+            record();
         }else if(evt.getStateChange()==ItemEvent.DESELECTED){
             recordButton.setText("START RECORD");
             recordButton.setForeground(Color.BLUE);
             statusLabel.setText("Record stoped");
+            progressBar.setIndeterminate(false);
+            recorder.stopRecord();
         }
     }//GEN-LAST:event_recordButtonItemStateChanged
 
@@ -166,6 +189,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar progressBar;
