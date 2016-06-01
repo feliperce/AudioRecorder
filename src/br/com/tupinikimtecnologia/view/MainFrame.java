@@ -5,11 +5,13 @@
 package br.com.tupinikimtecnologia.view;
 
 import br.com.tupinikimtecnologia.object.Recorder;
+import br.com.tupinikimtecnologia.object.TimerCounter;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
 import javax.sound.sampled.AudioFileFormat;
 import javax.swing.JFrame;
 
@@ -25,6 +27,8 @@ public class MainFrame extends javax.swing.JFrame {
     public static final String AUDIO_DIR = System.getProperty("user.home")+"/AudioRecorder/";
     
     private Recorder recorder;
+    private Timer timer;
+    private TimerCounter timerCounter;
     
     public MainFrame() {
         initComponents();
@@ -50,7 +54,14 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void startTimer(){
-        
+        timer = new Timer();
+        timerCounter = new TimerCounter(statusLabel);
+        timer.schedule(timerCounter, 0, 1000);
+    }
+    
+    public void stopTimer(){
+        timer.cancel();
+        timerCounter.stopTimer();
     }
     
     @SuppressWarnings("unchecked")
@@ -135,15 +146,16 @@ public class MainFrame extends javax.swing.JFrame {
         if(evt.getStateChange()==ItemEvent.SELECTED){
             recordButton.setText("STOP RECORD");
             recordButton.setForeground(Color.RED);
-            statusLabel.setText("Recording");
             progressBar.setIndeterminate(true);
             record();
+            startTimer();
         }else if(evt.getStateChange()==ItemEvent.DESELECTED){
             recordButton.setText("START RECORD");
             recordButton.setForeground(Color.BLUE);
             statusLabel.setText("Record stoped");
             progressBar.setIndeterminate(false);
             recorder.stopRecord();
+            stopTimer();
         }
     }//GEN-LAST:event_recordButtonItemStateChanged
 
