@@ -16,20 +16,15 @@ import javax.swing.JFrame;
 /**
  *
  * @author felipe
- * @version 0.4
+ * @version 0.5
  * --- MainForm ---
  */
 public class MainFrame extends javax.swing.JFrame {
-
-    /**
-     * Creates new form MainFrame
-     */
+    
     
     public static final String AUDIO_DIR = System.getProperty("user.home")+"/AudioRecorder/";
     
     private Recorder recorder;
-    private int second = 0, minute = 0;
-    private boolean isTiming = false;
     
     public MainFrame() {
         initComponents();

@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author felipe
- * @version 0.2
+ * @version 0.5
  * --- Audio Recorder thread class ---
  */
 public class Recorder extends Thread {
