@@ -10,15 +10,20 @@ import javax.swing.JLabel;
 /**
  *
  * @author felipe
- * @version 0.5
+ * @version 1.0
  * --- Class that count minutes and seconds ---
  */
 public class TimerCounter extends TimerTask {
 
     private int second = 0, minute = 0;
     private boolean isTiming = false;
-    private JLabel statusLabel;
+    private final JLabel statusLabel;
     
+    /**
+     * 
+     * @param statusLabel Set the label that will change every second
+     * 
+     */
     public TimerCounter(JLabel statusLabel){
         this.statusLabel = statusLabel;
     }

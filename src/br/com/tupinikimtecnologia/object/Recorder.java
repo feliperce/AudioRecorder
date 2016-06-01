@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author felipe
- * @version 0.5
+ * @version 1.0
  * --- Audio Recorder thread class ---
  */
 public class Recorder extends Thread {
@@ -38,15 +38,11 @@ public class Recorder extends Thread {
     
     private void startRecord(){
         try {
-
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
  
             line = (TargetDataLine) AudioSystem.getLine(info);
             line.open(audioFormat);
             line.start();   // start capturing
- 
-            System.out.println("Start capturing...");
- 
             AudioInputStream ais = new AudioInputStream(line);
  
             System.out.println("Start recording...");
@@ -70,7 +66,6 @@ public class Recorder extends Thread {
     @Override
     public void run() {
         super.run();
-        System.out.println("Chamou run");
         startRecord();
     }
  
