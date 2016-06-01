@@ -7,13 +7,19 @@ package br.com.tupinikimtecnologia.view;
 import br.com.tupinikimtecnologia.object.Recorder;
 import br.com.tupinikimtecnologia.object.TimerCounter;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,6 +35,8 @@ public class MainFrame extends javax.swing.JFrame {
     private Recorder recorder;
     private Timer timer;
     private TimerCounter timerCounter;
+    private File audioDir;
+    private File audioFile;
     
     public MainFrame() {
         initComponents();
@@ -40,14 +48,14 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void createAudioDir(){
-        File dir = new File(AUDIO_DIR);
-        dir.mkdir();
+        audioDir = new File(AUDIO_DIR);
+        audioDir.mkdir();
     }
     
     public void record(){
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_hh:mm:ss");
-        File audioFile = new File(AUDIO_DIR+"record"+sdf.format(date)+".wav");
+        audioFile = new File(AUDIO_DIR+"record"+sdf.format(date)+".wav");
         
         recorder = new Recorder(AudioFileFormat.Type.WAVE, audioFile);
         recorder.start();
@@ -76,6 +84,7 @@ public class MainFrame extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Audio Recorder");
 
         jLabel1.setText("Click to record:");
 
@@ -109,7 +118,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jButton1.setText("jButton1");
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/tupinikimtecnologia/icon/directory.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,11 +134,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(recordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(recordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,10 +148,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(recordButton)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(recordButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -152,12 +170,25 @@ public class MainFrame extends javax.swing.JFrame {
         }else if(evt.getStateChange()==ItemEvent.DESELECTED){
             recordButton.setText("START RECORD");
             recordButton.setForeground(Color.BLUE);
-            statusLabel.setText("Record stoped");
+            statusLabel.setText("Recorded! ("+audioFile.getName()+")");
             progressBar.setIndeterminate(false);
             recorder.stopRecord();
             stopTimer();
         }
     }//GEN-LAST:event_recordButtonItemStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            if(audioDir.exists()){
+                Desktop.getDesktop().open(audioDir);
+            }else{
+                audioDir.mkdir();
+                Desktop.getDesktop().open(audioDir);
+            }
+        } catch (IOException ex) {
+            JOptionPane.showConfirmDialog(null, "Wrong dir, try again later.", "ERROR", JOptionPane.OK_OPTION, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     
     /**
